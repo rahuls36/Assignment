@@ -3,14 +3,15 @@ import ReactDOM from 'react-dom';
 import axios from 'axios'
 import {Container,Row,Col,Button, Navbar, Form,Alert} from 'react-bootstrap'
 import {Link, BrowserRouter as Router,Redirect} from 'react-router-dom'
-import DatePicker from "react-datepicker";
+
 
 
 class AddProject extends Component{
     constructor(props){
         super(props)
         this.state ={
-            image : null
+            image : null,
+            added: false
         }
     }
 
@@ -26,9 +27,13 @@ class AddProject extends Component{
         form_data.append("name", ReactDOM.findDOMNode(this.refs.name).value)
         form_data.append("description", ReactDOM.findDOMNode(this.refs.description).value)
         form_data.append("duration", ReactDOM.findDOMNode(this.refs.duration).value)
-        form_data.append("avatar", this.state.image, this.state.image.name)
+        if (this.state.image) {
+            form_data.append("avatar", this.state.image, this.state.image.name)
+        }
         axios.post(`/api/projects/`,form_data,{headers : {"Content-Type" : "multipart/form-data", 'Accept': 'application/json'}}).then(response => {
-            console.log(response)
+            {this.setState({
+                added : true
+            })}
         })
     }
 
@@ -65,7 +70,7 @@ class AddProject extends Component{
             </Form>
                 <br></br>
                 <br></br>
-                {this.state.response_Text === "Created_Task_Successfully" ? <Alert variant ="primary"> Successful</Alert>: null }
+                {this.state.added  ? <Redirect push to={`/projects`} />: null }
             </Container>
                 )
 

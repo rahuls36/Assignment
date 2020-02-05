@@ -6,7 +6,7 @@ class Project(models.Model):
     name = models.CharField(max_length= 120)
     description = models.CharField(max_length= 1024)
     duration = models.CharField(max_length= 120)
-    avatar = models.ImageField(blank=True)
+    avatar = models.ImageField(blank=True, null= True)
 
     def __str__(self):
         return self.name

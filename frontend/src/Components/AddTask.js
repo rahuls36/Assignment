@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import axios from 'axios'
 import {Container,Row,Col,Button, Navbar, Form,Alert} from 'react-bootstrap'
 import DatePicker from "react-datepicker";
+import {Redirect} from 'react-router-dom'
 
 import "react-datepicker/dist/react-datepicker.css";
 axios.defaults.xsrfCookieName = 'csrftoken'
@@ -98,7 +99,7 @@ class AddTask extends Component{
             </Form>
                 <br></br>
                 <br></br>
-                {this.state.response_Text === "Created_Task_Successfully" ? <Alert variant ="primary"> Successful</Alert>: null }
+                {this.state.response_Text === "Created_Task_Successfully" ?  <Redirect push to={`/projects/${this.props.match.params.id}`}/>: null }
             </Container>
                 )
     }

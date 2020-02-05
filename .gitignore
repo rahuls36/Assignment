@@ -1,1 +1,5 @@
 *.jpg
+*.pyc
+*.png
+assignment/task_management/migrations
+venv

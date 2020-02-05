@@ -11,6 +11,7 @@ class TaskSerializer(serializers.ModelSerializer):
 
 
 class ProjectSerializer(serializers.ModelSerializer):
+    avatar = serializers.ImageField(max_length=None, allow_empty_file=True, allow_null=True, required=False)
     tasks = TaskSerializer(many = True, read_only= True)
     class Meta:
         model = Project

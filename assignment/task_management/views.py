@@ -68,3 +68,11 @@ class TaskView(APIView):
         task = Task.objects.get(pk = int(task_id))
         task.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def put(self, request, project_id, task_id):
+        task = Task.objects.get(pk= task_id)
+        serializer = TaskSerializer(task, data= request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

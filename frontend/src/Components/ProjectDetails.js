@@ -56,7 +56,7 @@ class ProjectDetails extends Component{
 
     goToroute = (e, task_id) =>{
         e.preventDefault()
-        this.props.history.push(`${this.state.user.id}/task/${task_id}`)
+        this.props.history.push({pathname : `${this.state.user.id}/task/${task_id}`, state: {user : this.state.user.id}})
     }
 
     editOptionName = (e) =>{
@@ -141,6 +141,22 @@ class ProjectDetails extends Component{
             image_edit : false
         })
     }
+    handleRemove = (e) => {
+       e.preventDefault()
+        const formData = new FormData()
+        formData.append('name', this.state.user.name)
+        formData.append('description', this.state.user.description)
+        formData.append('duration',this.state.user.duration)
+        formData.append("avatar", "")
+        axios.put(`/api/projects/${this.state.user.id}`,formData,{headers : {"Content-Type" : "multipart/form-data", 'Accept': 'application/json'}}).then(response => {
+            this.axios_call()
+        })
+        this.setState({
+            image_edit : false
+        })
+    }
+
+
 
     render(){
         return(
@@ -209,8 +225,9 @@ class ProjectDetails extends Component{
                                             </Modal.Header>
                                             <Modal.Body>
                                                <Form>
-                                                    <Form.Group >
-                                                        <Form.Control type="file" placeholder="Enter Description"  ref ="description"/>
+                                                   <Form.Group controlId="formBasicEmail">
+                                                        <Form.Label>Enter the Description</Form.Label>
+                                                        <Form.Control type="name" placeholder="Enter Description"  ref ="description"/>
                                                     </Form.Group>
                                                </Form>
                                             </Modal.Body>
@@ -257,11 +274,18 @@ class ProjectDetails extends Component{
                         </Col>
                     </Row>
                     <Row>
-                        <Button variant = "light" style = {this.ButtonStyle} onClick={this.imageEdit}> Edit Image</Button>
+                        {this.state.user.avatar ? (
+                            <Button variant="light" style={this.ButtonStyle} onClick={this.imageEdit}> Edit
+                                Image</Button>) :
+                            <Button variant="light" style={this.ButtonStyle} onClick={this.imageEdit}> Add
+                                Image</Button>
+                        }
                             {this.state.image_edit ?
                                 <Modal show = {this.state.image_edit} onHide={this.handleClose}>
                                     <Modal.Header closeButton>
-                                        <Modal.Title>Edit Image</Modal.Title>
+                                        {this.state.user.avatar ?(
+                                            <Modal.Title>Edit Image</Modal.Title>) :
+                                            <Modal.Title>Add Image</Modal.Title>}
                                     </Modal.Header>
                                     <Modal.Body>
                                         <Form>
@@ -271,9 +295,13 @@ class ProjectDetails extends Component{
                                         </Form>
                                     </Modal.Body>
                                     <Modal.Footer>
+                                        {this.state.user.avatar ?
+                                        <Button variant="secondary" onClick={e => this.handleRemove(e)}>
+                                            Remove Image
+                                        </Button>:
                                         <Button variant="secondary" onClick={e => this.handleCloseButton(e)}>
                                             Close
-                                        </Button>
+                                        </Button>}
                                         <Button variant="primary" onClick={e => this.handleSaveImage(e)}>
                                             Save Changes
                                         </Button>
